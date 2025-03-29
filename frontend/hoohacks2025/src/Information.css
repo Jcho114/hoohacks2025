@@ -1,11 +1,17 @@
 @import "tailwindcss";
 
 .information {
-    width: 100%; 
-    height: 100%; 
+    display: flex;
+    justify-content: space-between; /* Ensures space between the left and right panels */
+    align-items: flex-start; /* Aligns content to the top */
+    gap: 20px; /* Adds space between elements */
+    padding: 20px;
+    width: 100%;
+    height: 100%;
 }
 
 .panel-left {
+    flex: 3;
     height: 100%; 
     width: 30%; 
 
@@ -60,8 +66,72 @@
 }
 
 .article-details {
+    display: flex;
     width: 100%; 
     background-color: white; 
     height: 100%; 
     margin-bottom: 30px; 
+    flex-direction: column;
+    justify-content: center;
+}
+
+.article-title h1{
+    color: black;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: left;
+    margin-left: 5px;
+}
+
+.article-description {
+    flex-grow: 1;
+    color: black;
+    text-align: center;
+    padding: 5px;
+    text-align: left;
+}
+
+.article-button {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.article-button :hover {
+    opacity: 29%;
+}
+
+hr {
+    width: 100%;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 10px 0;
+}
+
+.select-button {
+    width: 50%;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.panel-right {
+    flex: 1;
+    height: 100%; 
+    width: 30%; 
+
+    display: flex; 
+    flex-direction: column;
+
+    padding: 30px; 
+    pointer-events: auto; 
+    max-width: 430px; 
+    justify-content: end;
+}
+
+.selected-articles {
+    width: 95%; 
+    background-color: white; 
+    height: 30%; 
+    margin-bottom: 30px; 
+    margin-left: 10px;
 }

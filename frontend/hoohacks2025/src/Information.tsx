@@ -1,5 +1,6 @@
 import ArticleDetails from './components/ArticleDetails'
 import SearchResults from './components/SearchResults'
+import SelectedArticles from './components/SelectedArticles'
 import './Information.css'
 
 const Information = () => {
@@ -79,6 +80,10 @@ const Information = () => {
 
             <SearchResults></SearchResults>
             <ArticleDetails></ArticleDetails>
+        </div>
+
+        <div className="panel-right"> 
+			<SelectedArticles></SelectedArticles>
         </div>
     </div>
   )
