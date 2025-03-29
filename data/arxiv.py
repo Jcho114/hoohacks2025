@@ -2,17 +2,18 @@ import requests
 import xmltodict
 
 ARXIV_URL = "https://export.arxiv.org/api/query"
-PAGE_SIZE = 100
+PAGE_SIZE = 20
+MAX_RETRIES = 20
 
 
 def main():
     curr_page = 0
+    retries = 0
     with open("dois.txt", "w", encoding="utf-8") as f:
         while True:
             response = requests.get(
                 f"{ARXIV_URL}?search_query=all&start={curr_page*PAGE_SIZE}&max_results={PAGE_SIZE}"
             )
-            curr_page += 1
             xml = xmltodict.parse(response.text)
 
             feed = xml["feed"]
@@ -20,8 +21,20 @@ def main():
                 break
 
             if "entry" not in feed:
+                if retries < MAX_RETRIES:
+                    retries += 1
+                    print(
+                        f"page {curr_page} did not return data, retrying ({retries}/{MAX_RETRIES})"
+                    )
+                else:
+                    print(
+                        f"page {curr_page} failed to return valid data, moving to next page"
+                    )
+                    retries = 0
+                    curr_page += 1
                 continue
 
+            curr_page += 1
             entries = feed["entry"]
             for entry in entries:
                 if "arxiv:doi" in entry:
