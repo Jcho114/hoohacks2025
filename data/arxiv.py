@@ -16,8 +16,11 @@ def main():
             xml = xmltodict.parse(response.text)
 
             feed = xml["feed"]
-            if "entry" not in feed:
+            if int(feed["opensearch:totalResults"]["#text"]) < PAGE_SIZE * curr_page:
                 break
+
+            if "entry" not in feed:
+                continue
 
             entries = feed["entry"]
             for entry in entries:
