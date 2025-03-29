@@ -57,6 +57,9 @@
     background-color: white; 
     height: 100%; 
     margin-bottom: 30px; 
+    padding: 25px; 
+
+    overflow: scroll; 
 }
 
 .article-details {
@@ -64,4 +67,12 @@
     background-color: white; 
     height: 100%; 
     margin-bottom: 30px; 
+}
+
+.paper-card {
+    width: 100%; 
+    color: black; 
+    padding-bottom: 5px; 
+    border-bottom: 1px solid black; 
+    margin-bottom: 15px; 
 }
