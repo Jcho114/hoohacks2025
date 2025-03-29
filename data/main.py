@@ -22,8 +22,17 @@ def main():
         page_url = f"{CROSSREF_URL}?rows={PAGE_SIZE}&cursor={cursor}"
         response = requests.get(page_url)
         message = response.json()["message"]
+
+        if "next-cursor" not in message:
+            break
         cursor = message["next-cursor"]
+        if not cursor:
+            break
+
         items = message["items"]
+        if len(items) < PAGE_SIZE:
+            break
+
         error_count = 0
         for item in items:
             try:
@@ -78,8 +87,7 @@ def main():
 
         total_count += PAGE_SIZE - error_count
         page_count += 1
-        print(f"processed a total of {page_count} pages")
-        print(f"processed a total of {total_count} items")
+        print(f"processed a total of {page_count} pages and {total_count} items")
         print(f"{error_count}/{PAGE_SIZE} items failed to import")
 
 
