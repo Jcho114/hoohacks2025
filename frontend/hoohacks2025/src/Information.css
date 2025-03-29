@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+.information {
+    width: 100%; 
+    height: 100%; 
+}
+
+.panel-left {
+    height: 100%; 
+    width: 30%; 
+
+    display: flex; 
+    flex-direction: column;
+
+    padding: 30px; 
+    pointer-events: auto; 
+    max-width: 430px; 
+}
+
+.title {
+    font-size: 2rem; 
+    font-weight: bold; 
+    color: white; 
+    margin: 10px; 
+
+    padding: 0px; 
+    margin: 0px; 
+    margin-bottom: 30px; 
+}
+
+.search {
+    width: 100%; 
+    background-color: white; 
+    height: 100px; 
+    margin-bottom: 30px; 
+}
+
+.search input {
+    width: 90%; 
+    height: 100%; 
+    font-size: 1rem; 
+    border: none; 
+    outline: none; 
+    box-sizing: border-box; 
+    padding-left: 10px; 
+
+    color: black; 
+}
+
+.search input::placeholder {
+    color: #000000; /* Placeholder text color */
+    font-size: 1rem; 
+}
+
+.search-results {
+    width: 100%; 
+    background-color: white; 
+    height: 100%; 
+    margin-bottom: 30px; 
+}
+
+.article-details {
+    width: 100%; 
+    background-color: white; 
+    height: 100%; 
+    margin-bottom: 30px; 
+}
