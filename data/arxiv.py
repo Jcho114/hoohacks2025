@@ -2,7 +2,7 @@ import requests
 import xmltodict
 
 ARXIV_URL = "https://export.arxiv.org/api/query"
-PAGE_SIZE = 20
+PAGE_SIZE = 100
 MAX_RETRIES = 20
 
 
