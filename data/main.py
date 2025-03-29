@@ -1,10 +1,8 @@
-import traceback
-
 import duckdb
 import requests
 
 CROSSREF_URL = "https://api.crossref.org/works"
-PAGE_SIZE = 20
+PAGE_SIZE = 1000
 
 
 def main():
@@ -16,7 +14,7 @@ def main():
 
     cursor = "*"
     total_count = 0
-    page_count = 0
+    total_valid_count = 0
 
     while True:
         page_url = f"{CROSSREF_URL}?rows={PAGE_SIZE}&cursor={cursor}"
@@ -79,15 +77,14 @@ def main():
 
                 conn.execute("COMMIT;")
 
-            except Exception:
+            except Exception as e:
                 conn.execute("ROLLBACK;")
                 error_count += 1
-                print("error with importing item:")
-                print(traceback.format_exc())
+                print("error with importing item:", e)
 
-        total_count += PAGE_SIZE - error_count
-        page_count += 1
-        print(f"processed a total of {page_count} pages and {total_count} items")
+        total_count += PAGE_SIZE
+        total_valid_count += PAGE_SIZE - error_count
+        print(f"processed a total of {total_valid_count}/{total_count} items")
         print(f"{error_count}/{PAGE_SIZE} items failed to import")
 
 
