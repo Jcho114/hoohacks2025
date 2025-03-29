@@ -3,7 +3,7 @@ import xmltodict
 
 ARXIV_URL = "https://export.arxiv.org/api/query"
 PAGE_SIZE = 100
-MAX_RETRIES = 20
+MAX_RETRIES = 40
 
 
 def main():
