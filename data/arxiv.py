@@ -24,16 +24,17 @@ def main():
                 if retries < MAX_RETRIES:
                     retries += 1
                     print(
-                        f"page {curr_page} did not return data, retrying ({retries}/{MAX_RETRIES})"
+                        f"page {curr_page+1} did not return data, retrying ({retries}/{MAX_RETRIES})"
                     )
                 else:
                     print(
-                        f"page {curr_page} failed to return valid data, moving to next page"
+                        f"page {curr_page+1} failed to return valid data, moving to next page"
                     )
                     retries = 0
                     curr_page += 1
                 continue
 
+            retries = 0
             curr_page += 1
             entries = feed["entry"]
             for entry in entries:
