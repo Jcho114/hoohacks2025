@@ -3,6 +3,8 @@ import SearchResults from './components/SearchResults'
 import SelectedArticles from './components/SelectedArticles'
 import './Information.css'
 
+import {PaperResultType, SearchResultsType} from './types/types';
+
 const Information = () => {
 
     // Function to handle search submission
@@ -78,7 +80,7 @@ const Information = () => {
                 <input className = "" placeholder = "enter keywords, doi, or url..."></input>
             </form>
 
-            <SearchResults></SearchResults>
+            <SearchResults search_results = {sampleSearchResults}></SearchResults>
             <ArticleDetails></ArticleDetails>
         </div>
 
