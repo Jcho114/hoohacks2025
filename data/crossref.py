@@ -1,8 +1,11 @@
+import time
+
 import duckdb
 import requests
 
 CROSSREF_URL = "https://api.crossref.org/works"
 PAGE_SIZE = 1000
+SLEEP_TIME = 50
 
 
 def main():
@@ -12,27 +15,23 @@ def main():
     conn.sql(CREATE_AUTHORED_TABLE)
     conn.sql(CREATE_PAPER_REFERENCES_TABLE)
 
-    cursor = "*"
-    total_count = 0
-    total_valid_count = 0
+    with open("dois.txt", "r", encoding="utf-8") as f:
+        lines = list(f)
+        curr_line = 0
+        total_lines = len(lines)
+        bad_lines = 0
 
-    while True:
-        page_url = f"{CROSSREF_URL}?rows={PAGE_SIZE}&cursor={cursor}"
-        response = requests.get(page_url)
-        message = response.json()["message"]
+        for line in lines:
+            curr_line += 1
+            page_url = f"{CROSSREF_URL}/{line}"
+            response = requests.get(page_url)
 
-        if "next-cursor" not in message:
-            break
-        cursor = message["next-cursor"]
-        if not cursor:
-            break
+            if response.status_code != 200:
+                bad_lines += 1
+                continue
 
-        items = message["items"]
-        if len(items) < PAGE_SIZE:
-            break
+            item = response.json()["message"]
 
-        error_count = 0
-        for item in items:
             try:
                 conn.execute("BEGIN;")
                 doi = item["DOI"]
@@ -79,13 +78,13 @@ def main():
 
             except Exception as e:
                 conn.execute("ROLLBACK;")
-                error_count += 1
                 print("error with importing item:", e)
 
-        total_count += PAGE_SIZE
-        total_valid_count += PAGE_SIZE - error_count
-        print(f"processed a total of {total_valid_count}/{total_count} items")
-        print(f"{error_count}/{PAGE_SIZE} items failed to import")
+            time.sleep(SLEEP_TIME / 1000)
+
+            print(
+                f"processed {curr_line}/{total_lines} lines with {bad_lines} bad lines"
+            )
 
 
 CREATE_PAPERS_TABLE = """
