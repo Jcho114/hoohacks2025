@@ -10,7 +10,7 @@ def main():
     with open("dois.txt", "w", encoding="utf-8") as f:
         while True:
             response = requests.get(
-                f"{ARXIV_URL}?search_query=all&start={curr_page}&max_results={PAGE_SIZE}"
+                f"{ARXIV_URL}?search_query=all&start={curr_page*PAGE_SIZE}&max_results={PAGE_SIZE}"
             )
             curr_page += 1
             xml = xmltodict.parse(response.text)
