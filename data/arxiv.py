@@ -1,3 +1,5 @@
+import argparse
+
 import requests
 import xmltodict
 
@@ -6,11 +8,11 @@ PAGE_SIZE = 100
 MAX_RETRIES = 40
 
 
-def main():
-    curr_page = 0
+def main(start_page, end_page):
+    curr_page = start_page
     retries = 0
-    with open("dois.txt", "w", encoding="utf-8") as f:
-        while True:
+    with open(f"dois-{start_page}-{end_page}.txt", "w", encoding="utf-8") as f:
+        while curr_page <= end_page:
             response = requests.get(
                 f"{ARXIV_URL}?search_query=all&start={curr_page*PAGE_SIZE}&max_results={PAGE_SIZE}"
             )
@@ -46,4 +48,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Process some integers.")
+    parser.add_argument("--start", type=int, required=True)
+    parser.add_argument("--end", type=int, required=True)
+    args = parser.parse_args()
+    main(args.start, args.end)

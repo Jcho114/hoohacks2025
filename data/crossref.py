@@ -1,3 +1,4 @@
+import argparse
 import time
 
 import duckdb
@@ -8,14 +9,14 @@ PAGE_SIZE = 1000
 SLEEP_TIME = 50
 
 
-def main():
+def main(filename):
     conn = duckdb.connect("data.db")
     conn.sql(CREATE_PAPERS_TABLE)
     conn.sql(CREATE_AUTHORS_TABLE)
     conn.sql(CREATE_AUTHORED_TABLE)
     conn.sql(CREATE_PAPER_REFERENCES_TABLE)
 
-    with open("dois.txt", "r", encoding="utf-8") as f:
+    with open(filename, "r", encoding="utf-8") as f:
         lines = list(f)
         curr_line = 0
         total_lines = len(lines)
@@ -141,4 +142,7 @@ INSERT INTO paper_references VALUES (?, ?) ON CONFLICT DO NOTHING
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Process some integers.")
+    parser.add_argument("--file", type=str, required=True)
+    args = parser.parse_args()
+    main(args.file)

@@ -1,2 +1,2 @@
 clean:
-	rm -f data.db dois.txt
+	rm -f data.db dois*.txt
