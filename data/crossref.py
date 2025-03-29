@@ -1,7 +1,7 @@
 import argparse
+import sqlite3
 import time
 
-import duckdb
 import requests
 
 CROSSREF_URL = "https://api.crossref.org/works"
@@ -10,11 +10,11 @@ SLEEP_TIME = 50
 
 
 def main(filename):
-    conn = duckdb.connect("data.db")
-    conn.sql(CREATE_PAPERS_TABLE)
-    conn.sql(CREATE_AUTHORS_TABLE)
-    conn.sql(CREATE_AUTHORED_TABLE)
-    conn.sql(CREATE_PAPER_REFERENCES_TABLE)
+    conn = sqlite3.connect("data.db")
+    conn.execute(CREATE_PAPERS_TABLE)
+    conn.execute(CREATE_AUTHORS_TABLE)
+    conn.execute(CREATE_AUTHORED_TABLE)
+    conn.execute(CREATE_PAPER_REFERENCES_TABLE)
 
     with open(filename, "r", encoding="utf-8") as f:
         lines = list(f)
