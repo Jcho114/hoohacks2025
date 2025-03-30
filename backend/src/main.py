@@ -15,7 +15,7 @@ app.add_middleware(
 MAX_SUGGESTIONS = 10
 
 AUTOCOMPLETE_QUERY = f"""
-SELECT doi, title FROM papers
+SELECT * FROM papers
 WHERE doi LIKE ?
 OR title LIKE ?
 ORDER BY is_referenced_count DESC
@@ -31,7 +31,17 @@ def papers_search(query: str):
     rows = cursor.fetchall()
     suggestions = []
     for row in rows:
-        suggestion = {"doi": row[0], "title": row[1]}
+        suggestion = {
+            "doi": row[0],
+            "reference_count": row[1],
+            "is_referenced_count": row[2],
+            "publisher": row[3],
+            "created_date": row[4],
+            "type": row[5],
+            "title": row[6],
+            "url": row[7],
+            "summary": row[8],
+        }
         suggestions.append(suggestion)
     return {"suggestions": suggestions}
 
@@ -61,10 +71,15 @@ unique_node_distances AS (
     FROM node_distances
     GROUP BY doi
 )
-SELECT p.*, und.distance
+SELECT p.*
 FROM papers p
 JOIN unique_node_distances und ON p.doi = und.doi
 WHERE p.doi IN (SELECT doi FROM unique_node_distances)
+ORDER BY und.distance LIMIT 30
+"""
+
+SINGLE_NODE_QUERY = """
+SELECT * FROM papers WHERE doi = ?
 """
 
 
@@ -76,6 +91,23 @@ def papers_bfs(doi: str):
     rows = cursor.fetchall()
     nodes = []
     dois = []
+
+    if len(rows) == 0:
+        cursor = conn.execute(SINGLE_NODE_QUERY, [doi])
+        row = cursor.fetchone()
+        node = {
+            "doi": row[0],
+            "reference_count": row[1],
+            "is_referenced_count": row[2],
+            "publisher": row[3],
+            "created_date": row[4],
+            "type": row[5],
+            "title": row[6],
+            "url": row[7],
+            "summary": row[8],
+        }
+        return {"nodes": [node], "edges": []}
+
     for row in rows:
         node = {
             "doi": row[0],
@@ -86,10 +118,14 @@ def papers_bfs(doi: str):
             "type": row[5],
             "title": row[6],
             "url": row[7],
-            "distance": row[8] if row[0] != doi else 0,
+            "summary": row[8],
         }
-        nodes.append(node)
-        dois.append(row[0])
+        if row[0] == doi:
+            nodes.insert(0, node)
+            dois.insert(0, row[0])
+        else:
+            nodes.append(node)
+            dois.append(row[0])
 
     placeholders = ", ".join("?" * len(dois))
     EDGES_QUERY = f"""

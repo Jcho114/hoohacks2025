@@ -1,67 +1,33 @@
-import { useState, useEffect } from "react";
-import { PaperResultType, SearchResultsType } from "../types/types";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { PaperType } from "@/api/papers";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const ArticleDetails = ({
   currentPaper,
-  papersToVisualize,
-  setPapersToVisualize,
 }: {
-  currentPaper: PaperResultType | null;
-  papersToVisualize: SearchResultsType;
-  setPapersToVisualize: (papers: SearchResultsType) => void;
+  currentPaper: PaperType | null;
 }) => {
-  const [disabled, setDisabled] = useState(false);
-
-  const handleSelectPaper = () => {
-    if (currentPaper !== null) {
-      const existingResults = papersToVisualize.results;
-      const isPaperAlreadySelected = existingResults.some(
-        (paper) => paper.DOI === currentPaper.DOI
-      );
-
-      if (!isPaperAlreadySelected && existingResults.length < 2) {
-        existingResults.push(currentPaper);
-        setPapersToVisualize({ results: existingResults });
-      } else {
-        // If the paper is already selected, do nothing
-        // Or you could choose to replace it or give an alert
-        console.log("Paper already selected or maximum limit reached.");
-        return;
-      }
-
-      console.log("Selected paper added to visualization:", currentPaper);
-      console.log("Current papers to visualize:", papersToVisualize);
-    }
-  };
-
-  useEffect(() => {
-    console.log("jiowejfiw");
-    if (currentPaper !== null) {
-      const existingResults = papersToVisualize.results;
-      const isPaperAlreadySelected = existingResults.some(
-        (paper) => paper.DOI === currentPaper.DOI
-      );
-
-      if (existingResults.length >= 2 || isPaperAlreadySelected) {
-        console.log("boolean");
-        setDisabled(true);
-      } else {
-        setDisabled(false);
-      }
-    } else {
-      console.log("hello");
-      setDisabled(true);
-    }
-  }, [papersToVisualize, currentPaper]);
-
   return (
-    <Card className="flex w-full flex-1 flex-col gap-0 p-4 text-black rounded-sm">
+    <Card className="break-all absolute flex w-1/5 bg-white h-3/8 flex-col gap-0 p-4 rounded-sm bottom-6 right-6">
       <h1 className="text-md font-bold">
-        {currentPaper === null ? "Article Details" : currentPaper.title}
+        {currentPaper === null ? (
+          "Article Details"
+        ) : (
+          <a href={currentPaper.url} target="_blank">
+            {currentPaper.title.length > 45
+              ? currentPaper.title.substring(0, 45) + "..."
+              : currentPaper.title}
+          </a>
+        )}
       </h1>
       <Separator className="bg-black my-1 rounded-sm" />
       {currentPaper === null ? (
@@ -69,18 +35,46 @@ const ArticleDetails = ({
       ) : (
         <div className="flex w-full h-full flex-col justify-between">
           <div className="text-md">
-            <p>{currentPaper.summary}</p>
+            <p>
+              {currentPaper.summary === null
+                ? "Summary not available..."
+                : currentPaper.summary.length > 170
+                ? currentPaper.summary.substring(0, 170).trim() + "..."
+                : currentPaper.summary}
+            </p>
           </div>
-          <Button
-            className={cn(
-              "text-sm border-black border-1 cursor-pointer",
-              disabled ? "select-button-disabled" : "select-button-show"
-            )}
-            onClick={() => handleSelectPaper()}
-            disabled={disabled}
-          >
-            Submit
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="w-full text-sm border-black border-1 cursor-pointer">
+                More Info
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-white overflow-scroll max-h-[80%]">
+              <DialogHeader>
+                <DialogTitle className="font-bold text-xl">
+                  {currentPaper.title}
+                </DialogTitle>
+                <DialogDescription>
+                  <h1>DOI: {currentPaper.doi}</h1>
+                  <h1>Created: {currentPaper.created_date}</h1>
+                  <h1>Type: {currentPaper.type}</h1>
+                  <h1>Publisher: {currentPaper.publisher}</h1>
+                  <h1>URL: {currentPaper.url}</h1>
+                  <h1>Reference Count: {currentPaper.reference_count}</h1>
+                  <h1>Referenced Count: {currentPaper.is_referenced_count}</h1>
+                </DialogDescription>
+              </DialogHeader>
+              {currentPaper.summary ? (
+                <>
+                  <Separator className="bg-black !p-0 !m-0" />
+                  <div className="font-bold text-md mb-[-10px]">Summary</div>
+                  <div>
+                    <h1 className="text-md">{currentPaper.summary}</h1>
+                  </div>
+                </>
+              ) : null}
+            </DialogContent>
+          </Dialog>
         </div>
       )}
     </Card>
