@@ -6,6 +6,7 @@
 *.txt
 *.json
 doi
+*.db-journal
 
 # macos
 .DS_Store
