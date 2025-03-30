@@ -17,7 +17,7 @@ const ArticleDetails = ({
   currentPaper: PaperType | null;
 }) => {
   return (
-    <Card className="absolute flex w-1/5 bg-white h-3/8 flex-col gap-0 p-4 rounded-sm bottom-6 right-6">
+    <Card className="break-all absolute flex w-1/5 bg-white h-3/8 flex-col gap-0 p-4 rounded-sm bottom-6 right-6">
       <h1 className="text-md font-bold">
         {currentPaper === null ? (
           "Article Details"
@@ -38,8 +38,8 @@ const ArticleDetails = ({
             <p>
               {currentPaper.summary === null
                 ? "Summary not available..."
-                : currentPaper.summary.length > 165
-                ? currentPaper.summary.substring(0, 165).trim() + "..."
+                : currentPaper.summary.length > 170
+                ? currentPaper.summary.substring(0, 170).trim() + "..."
                 : currentPaper.summary}
             </p>
           </div>
