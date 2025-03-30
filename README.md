@@ -1,3 +1,5 @@
+# Paper Trail
+
 ## Inspiration
 
 We were inspired by a YouTube video we saw that mapped out Wikipedia and drew connections between different pages. Exploring this idea further, we wondered how could we utilize mapping and search algorithms to help people in education. While brainstorming ideas, we thought of Paper Trail and pursued it since finding the right research papers can be difficult and time-consuming.
