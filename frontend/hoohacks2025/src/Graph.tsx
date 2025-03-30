@@ -1,28 +1,36 @@
-import React, { useCallback } from 'react';
+import React, {useCallback } from 'react';
 
 import {
   ReactFlow,
   useNodesState,
   useEdgesState,
-  addEdge,
 } from '@xyflow/react';
  
 import '@xyflow/react/dist/style.css';
- 
-const initialNodes = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-  { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+import PaperNodes from './PaperNodes';
+import nodes from './message.json';
+import edges from './message.json';
+
+const nodeTypes = { paperNodes: PaperNodes }; 
+
+const initialNodes = nodes.nodes.map((node: { doi: string; title: string; publisher: string }) => ({
+  id: node.doi,
+  position: { x: Math.random() * 1000, y: Math.random() * 800 },
+  data: { title: node.title , publisher: node.publisher},
+  type: 'paperNodes',
+}));
+
+const initialEdges = edges.edges.map((edge: { src: string; dest: string }) => ({
+  id: `${edge.src}-${edge.dest}`, 
+  source: edge.src, // Source node ID
+  target: edge.dest, // Target node ID
+}));  
+
+console.log(initialNodes.forEach((node) => console.log(node.id)));
  
 export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
- 
-//   const onConnect = useCallback(
-//     (params) => setEdges((eds) => addEdge(params, eds)),
-//     [setEdges],
-//   );
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges); 
  
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
@@ -31,18 +39,10 @@ export default function App() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        // onConnect={onConnect}
+        onNodeClick={(event, node) => console.log('Node clicked:', node)}
+        nodeTypes={nodeTypes}
       />
+    
     </div>
   );
 }
-
-// import React from 'react'
-
-// const Graph = () => {
-//   return (
-//     <div></div>
-//   )
-// }
-
-// export default Graph
