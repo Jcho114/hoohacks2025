@@ -49,7 +49,7 @@ const ArticleDetails = ({
                 More Info
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-white overflow-scroll h-[80%]">
+            <DialogContent className="bg-white overflow-scroll max-h-[80%]">
               <DialogHeader>
                 <DialogTitle className="font-bold text-xl">
                   {currentPaper.title}
@@ -64,11 +64,15 @@ const ArticleDetails = ({
                   <h1>Referenced Count: {currentPaper.is_referenced_count}</h1>
                 </DialogDescription>
               </DialogHeader>
-              <Separator className="bg-black !p-0 !m-0" />
-              <div className="font-bold text-md mb-[-10px]">Summary</div>
-              <div>
-                <h1 className="text-md">{currentPaper.summary}</h1>
-              </div>
+              {currentPaper.summary ? (
+                <>
+                  <Separator className="bg-black !p-0 !m-0" />
+                  <div className="font-bold text-md mb-[-10px]">Summary</div>
+                  <div>
+                    <h1 className="text-md">{currentPaper.summary}</h1>
+                  </div>
+                </>
+              ) : null}
             </DialogContent>
           </Dialog>
         </div>
