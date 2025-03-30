@@ -18,11 +18,12 @@ AUTOCOMPLETE_QUERY = f"""
 SELECT doi, title FROM papers
 WHERE doi LIKE ?
 OR title LIKE ?
+ORDER BY is_referenced_count DESC
 LIMIT {MAX_SUGGESTIONS}
 """
 
 
-@app.get("/papers/autocomplete/{query}")
+@app.get("/papers/suggestions/{query}")
 def papers_search(query: str):
     conn = sqlite3.connect("../data/data.db")
     search_term = f"%{query}%"
@@ -47,13 +48,23 @@ WITH RECURSIVE citation_chain AS (
     FROM paper_references pr
     INNER JOIN citation_chain cc ON pr.src_doi = cc.dest_doi
     WHERE cc.depth < ?
-)
-SELECT * FROM papers 
-WHERE doi IN (
-    SELECT src_doi FROM citation_chain
+),
+node_distances AS (
+    SELECT src_doi AS doi, depth AS distance
+    FROM citation_chain
     UNION
-    SELECT dest_doi FROM citation_chain
+    SELECT dest_doi AS doi, depth AS distance
+    FROM citation_chain
+),
+unique_node_distances AS (
+    SELECT doi, MIN(distance) AS distance
+    FROM node_distances
+    GROUP BY doi
 )
+SELECT p.*, und.distance
+FROM papers p
+JOIN unique_node_distances und ON p.doi = und.doi
+WHERE p.doi IN (SELECT doi FROM unique_node_distances)
 """
 
 
@@ -75,6 +86,7 @@ def papers_bfs(doi: str):
             "type": row[5],
             "title": row[6],
             "url": row[7],
+            "distance": row[8] if row[0] != doi else 0,
         }
         nodes.append(node)
         dois.append(row[0])
