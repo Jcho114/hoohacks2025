@@ -170,10 +170,8 @@ function Graph({
             setIsSelectable(node.id);
             setCurrentPaper(node.data.paper as PaperType);
           }}
-          onNodeDrag={(_, node) => {
-            setIsSelectable(node.id);
-            setCurrentPaper(node.data.paper as PaperType);
-          }}
+          nodesDraggable={false}
+          edgesFocusable={false}
         />
       )}
     </div>

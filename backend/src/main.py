@@ -78,6 +78,10 @@ WHERE p.doi IN (SELECT doi FROM unique_node_distances)
 ORDER BY und.distance LIMIT 30
 """
 
+SINGLE_NODE_QUERY = """
+SELECT * FROM papers WHERE doi = ?
+"""
+
 
 @app.get("/papers/bfs")
 def papers_bfs(doi: str):
@@ -87,6 +91,23 @@ def papers_bfs(doi: str):
     rows = cursor.fetchall()
     nodes = []
     dois = []
+
+    if len(rows) == 0:
+        cursor = conn.execute(SINGLE_NODE_QUERY, [doi])
+        row = cursor.fetchone()
+        node = {
+            "doi": row[0],
+            "reference_count": row[1],
+            "is_referenced_count": row[2],
+            "publisher": row[3],
+            "created_date": row[4],
+            "type": row[5],
+            "title": row[6],
+            "url": row[7],
+            "summary": row[8],
+        }
+        return {"nodes": [node], "edges": []}
+
     for row in rows:
         node = {
             "doi": row[0],
