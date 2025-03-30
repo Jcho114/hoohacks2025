@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 .selected-node {
-    border: 1px solid #FF6347; /* Highlight color (e.g., Tomato) */
-    border-radius: 5px; /* Rounded corners */
-    box-shadow: 0 0 10px rgba(255, 99, 71, 0.6); /* Optional glow effect */
-  }
+  border: 1px solid gray;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}

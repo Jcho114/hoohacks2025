@@ -74,6 +74,7 @@ SELECT p.*, und.distance
 FROM papers p
 JOIN unique_node_distances und ON p.doi = und.doi
 WHERE p.doi IN (SELECT doi FROM unique_node_distances)
+ORDER BY und.distance
 """
 
 
@@ -97,8 +98,12 @@ def papers_bfs(doi: str):
             "url": row[7],
             "distance": row[8] if row[0] != doi else 0,
         }
-        nodes.append(node)
-        dois.append(row[0])
+        if row[0] == doi:
+            nodes.insert(0, node)
+            dois.insert(0, row[0])
+        else:
+            nodes.append(node)
+            dois.append(row[0])
 
     placeholders = ", ".join("?" * len(dois))
     EDGES_QUERY = f"""
