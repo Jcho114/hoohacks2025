@@ -1,15 +1,29 @@
 import { ReactFlow, useNodesState, useEdgesState } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import nodes from './message.json';
+import edges from './message.json';
+import PaperNodes from './PaperNodes';
 
-const initialNodes = [
-  { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
-  { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
-];
-const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
+const nodeTypes = { paperNodes: PaperNodes }; 
+
+const initialNodes = nodes.nodes.map((node: { doi: string; title: string; publisher: string }) => ({
+  id: node.doi,
+  position: { x: Math.random() * 1000, y: Math.random() * 800 },
+  data: { title: node.title , publisher: node.publisher},
+  type: 'paperNodes',
+}));
+
+const initialEdges = edges.edges.map((edge: { src: string; dest: string }) => ({
+  id: `${edge.src}-${edge.dest}`, 
+  source: edge.src, // Source node ID
+  target: edge.dest, // Target node ID
+}));  
+
 
 function Graph() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
@@ -18,6 +32,8 @@ function Graph() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        nodeTypes={nodeTypes}
+        onNodeClick={(event, node) => console.log('Node clicked:', node)}
       />
     </div>
   );
