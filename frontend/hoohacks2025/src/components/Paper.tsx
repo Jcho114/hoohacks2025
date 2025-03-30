@@ -10,7 +10,7 @@ const Paper = ({
   setCurrentPaper: (paper: PaperType | null) => void;
 }) => {
   return (
-    <div>
+    <div className="select-none cursor-pointer">
       <div
         className="flex flex-row justify-between items-center w-full"
         onClick={
