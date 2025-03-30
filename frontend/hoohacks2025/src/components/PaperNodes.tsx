@@ -10,7 +10,14 @@ function PaperNodes({ data }: { data: { paper: PaperType } }) {
   };
 
   return (
-    <div style={{ padding: 10, border: "1px solid #777", borderRadius: 5 }}>
+    <div
+      style={{
+        padding: 10,
+        border: "1px solid #777",
+        background: "white",
+        borderRadius: 5,
+      }}
+    >
       <Handle type="target" position={Position.Left} />
       <div>{truncateTitle(data.paper.title)}</div>
       <Handle type="source" position={Position.Right} />

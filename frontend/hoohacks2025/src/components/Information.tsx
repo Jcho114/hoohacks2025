@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { PaperType } from "@/api/papers";
 import { usePaperSuggestion } from "@/hooks/papers";
+import { IoMdPaperPlane } from "react-icons/io";
 
 const Information = ({
   currentPaper,
@@ -33,12 +34,15 @@ const Information = ({
   return (
     <div className="flex flex-col justify-between items-start w-full h-full">
       <div className="flex flex-col flex-3 h-full w-full px-8 py-6 gap-4">
-        <p className="text-[1.5rem] font-bold text-black mb-[-0.5rem]">
-          Research Wizard
-        </p>
+        <div className="flex flex-row gap-2 justify-center items-center">
+          <p className="text-[1.5rem] font-bold text-black mb-[-0.5rem]">
+            Paper Trail
+          </p>
+          <IoMdPaperPlane className="mt-2 w-6 h-6" />
+        </div>
         <form onSubmit={handleSuggestionSubmit}>
           <Input
-            className="w-full text-xl p-4 rounded-sm"
+            className="w-full text-xl p-4 rounded-sm focus-visible:ring-1"
             onChange={(e) => setQuery(e.target.value)}
             placeholder="enter keywords, doi, or url..."
           />

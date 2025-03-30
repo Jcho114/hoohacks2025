@@ -115,7 +115,7 @@ function Graph({
   );
 
   return (
-    <div className="w-full h-full flex justify-center items-center">
+    <div className="w-full h-full flex justify-center items-center bg-gray-50">
       {bfsData === undefined ? (
         <h1>No Paper Selected</h1>
       ) : isBfsFetching ? (
@@ -133,6 +133,7 @@ function Graph({
           onConnect={onConnect}
           connectionLineType={ConnectionLineType.SmoothStep}
           fitView
+          minZoom={0.05}
           onNodeClick={(event, node) => {
             setIsSelectable(node.id);
             setCurrentPaper(node.data.paper as PaperType);
