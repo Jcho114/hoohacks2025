@@ -1,10 +1,14 @@
 # python
 .venv
+__pycache__
 
 # data
 *.db
 *.txt
 *.json
+aditya
+allen
+lorenzo
 doi
 *.db-journal
 
