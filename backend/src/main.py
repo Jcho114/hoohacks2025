@@ -15,7 +15,7 @@ app.add_middleware(
 MAX_SUGGESTIONS = 10
 
 AUTOCOMPLETE_QUERY = f"""
-SELECT doi, title FROM papers
+SELECT * FROM papers
 WHERE doi LIKE ?
 OR title LIKE ?
 ORDER BY is_referenced_count DESC
@@ -31,7 +31,16 @@ def papers_search(query: str):
     rows = cursor.fetchall()
     suggestions = []
     for row in rows:
-        suggestion = {"doi": row[0], "title": row[1]}
+        suggestion = {
+            "doi": row[0],
+            "reference_count": row[1],
+            "is_referenced_count": row[2],
+            "publisher": row[3],
+            "created_date": row[4],
+            "type": row[5],
+            "title": row[6],
+            "url": row[7],
+        }
         suggestions.append(suggestion)
     return {"suggestions": suggestions}
 

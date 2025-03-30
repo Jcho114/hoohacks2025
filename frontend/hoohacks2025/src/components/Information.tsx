@@ -1,79 +1,33 @@
 import ArticleDetails from "./ArticleDetails";
 import SearchResults from "./SearchResults";
 import SelectedArticles from "./SelectedArticles";
-import { PaperResultType, SearchResultsType } from "../types/types";
-import { ChangeEvent } from "react";
+import { FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { PaperType } from "@/api/papers";
+import { usePaperSuggestion } from "@/hooks/papers";
 
 const Information = ({
   currentPaper,
+  refetchBfs,
   setCurrentPaper,
   papersToVisualize,
   setPapersToVisualize,
 }: {
-  currentPaper: PaperResultType | null;
-  setCurrentPaper: (paper: PaperResultType | null) => void;
-  papersToVisualize: SearchResultsType;
-  setPapersToVisualize: (search_results: SearchResultsType) => void;
+  currentPaper: PaperType | null;
+  refetchBfs: () => void;
+  setCurrentPaper: (paper: PaperType | null) => void;
+  papersToVisualize: PaperType[];
+  setPapersToVisualize: (search_results: PaperType[]) => void;
 }) => {
-  const handleSearchSubmit = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    const query = event.target.value;
-  };
+  const [query, setQuery] = useState<string | null>(null);
+  const suggestionQuery = usePaperSuggestion(query);
 
-  const sampleSearchResults = {
-    results: [
-      {
-        title: "Attention Is All You Need",
-        author: "first author",
-        DOI: "1",
-        related: [],
-
-        date_published: "2024/10/15",
-        reference_count: 1,
-        summary: "first summary",
-      },
-      {
-        title: "second title",
-        author: "second author",
-        DOI: "2",
-        related: [],
-
-        date_published: "2024/10/15",
-        reference_count: 2,
-        summary: "second summary",
-      },
-      {
-        title: "third title",
-        author: "third author",
-        DOI: "3",
-        related: [],
-
-        date_published: "2024/10/15",
-        reference_count: 3,
-        summary: "third summary",
-      },
-      {
-        title: "Fourth paper",
-        author: "fourth-author",
-        DOI: "4",
-        related: [],
-
-        date_published: "2024/10/15",
-        reference_count: 4,
-        summary: "fourth",
-      },
-      {
-        title: "Fifth paper",
-        author: "Fifth-author",
-        DOI: "5",
-        related: [],
-
-        date_published: "2024/10/15",
-        reference_count: 5,
-        summary: "Fifth",
-      },
-    ],
+  const handleSuggestionSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (query === "") {
+      return;
+    }
+    suggestionQuery.refetchSuggestion();
   };
 
   return (
@@ -82,18 +36,22 @@ const Information = ({
         <p className="text-[1.5rem] font-bold text-black mb-[-0.5rem]">
           Research Wizard
         </p>
-        <Input
-          className="w-full text-xl p-4 rounded-sm"
-          onChange={handleSearchSubmit}
-          placeholder="enter keywords, doi, or url..."
-        />
+        <form onSubmit={handleSuggestionSubmit}>
+          <Input
+            className="w-full text-xl p-4 rounded-sm"
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="enter keywords, doi, or url..."
+          />
+        </form>
         <SearchResults
-          search_results={sampleSearchResults}
+          isSuggestionFetching={suggestionQuery.isSuggestionFetching}
+          search_results={suggestionQuery.suggestionData || []}
           setCurrentPaper={setCurrentPaper}
           papersToVisualize={papersToVisualize}
           setPapersToVisualize={setPapersToVisualize}
         />
         <ArticleDetails
+          refetchBfs={refetchBfs}
           currentPaper={currentPaper}
           papersToVisualize={papersToVisualize}
           setPapersToVisualize={setPapersToVisualize}

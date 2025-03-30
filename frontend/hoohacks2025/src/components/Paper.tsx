@@ -1,4 +1,4 @@
-import { PaperResultType } from "../types/types";
+import { PaperType } from "@/api/papers";
 
 const Paper = ({
   paper_information,
@@ -7,42 +7,50 @@ const Paper = ({
   papersToVisualize,
   setPapersToVisualize,
 }: {
-  paper_information: PaperResultType;
+  paper_information: PaperType;
   cancel: boolean;
-  setCurrentPaper: (paper: PaperResultType | null) => void;
-  papersToVisualize: { results: PaperResultType[] };
-  setPapersToVisualize: (papers: { results: PaperResultType[] }) => void;
+  setCurrentPaper: (paper: PaperType | null) => void;
+  papersToVisualize: PaperType[];
+  setPapersToVisualize: (papers: PaperType[]) => void;
 }) => {
-  const removePapersFromVisualization = (cancelledPaper: PaperResultType) => {
-    const resultsArray = [];
-
-    if (papersToVisualize.results !== null) {
-      for (let i = 0; i < papersToVisualize.results.length; i++) {
-        if (cancelledPaper.DOI !== papersToVisualize["results"][i].DOI) {
-          resultsArray.push(papersToVisualize.results[i]);
-        }
-      }
-    }
-
-    setPapersToVisualize({ results: resultsArray });
+  const removePapersFromVisualization = (cancelledPaper: PaperType) => {
+    setPapersToVisualize(
+      papersToVisualize.filter((paper) => paper.doi !== cancelledPaper.doi)
+    );
   };
 
   return (
     <div>
       <div
         className="flex flex-row justify-between items-center w-full"
-        onClick={() => setCurrentPaper(paper_information)}
+        onClick={
+          cancel
+            ? () => {}
+            : () => {
+                setCurrentPaper(paper_information);
+              }
+        }
       >
         <div>
-          <h2 className="font-bold text-md">{paper_information.title}</h2>
-          <p className="text-md">{paper_information.date_published}</p>
+          <h2 className="font-bold text-md">
+            {paper_information.title.length > 45
+              ? paper_information.title.substring(0, 45) + "..."
+              : paper_information.title}
+          </h2>
+          <p className="text-md">
+            {
+              new Date(paper_information.created_date)
+                .toISOString()
+                .split("T")[0]
+            }
+          </p>
         </div>
         {cancel ? (
           <svg
             className="cursor-pointer"
             onClick={() => removePapersFromVisualization(paper_information)}
-            width="20"
-            height="20"
+            width="30"
+            height="30"
             viewBox="0 0 15 15"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +60,7 @@ const Paper = ({
               fill="currentColor"
               fill-rule="evenodd"
               clip-rule="evenodd"
-            ></path>
+            />
           </svg>
         ) : null}
       </div>

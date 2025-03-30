@@ -1,59 +1,53 @@
 import { useState, useEffect } from "react";
-import { PaperResultType, SearchResultsType } from "../types/types";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { PaperType } from "@/api/papers";
 
 const ArticleDetails = ({
+  refetchBfs,
   currentPaper,
   papersToVisualize,
   setPapersToVisualize,
 }: {
-  currentPaper: PaperResultType | null;
-  papersToVisualize: SearchResultsType;
-  setPapersToVisualize: (papers: SearchResultsType) => void;
+  refetchBfs: () => void;
+  currentPaper: PaperType | null;
+  papersToVisualize: PaperType[];
+  setPapersToVisualize: (papers: PaperType[]) => void;
 }) => {
   const [disabled, setDisabled] = useState(false);
 
   const handleSelectPaper = () => {
-    if (currentPaper !== null) {
-      const existingResults = papersToVisualize.results;
-      const isPaperAlreadySelected = existingResults.some(
-        (paper) => paper.DOI === currentPaper.DOI
-      );
-
-      if (!isPaperAlreadySelected && existingResults.length < 2) {
-        existingResults.push(currentPaper);
-        setPapersToVisualize({ results: existingResults });
-      } else {
-        // If the paper is already selected, do nothing
-        // Or you could choose to replace it or give an alert
-        console.log("Paper already selected or maximum limit reached.");
-        return;
-      }
-
-      console.log("Selected paper added to visualization:", currentPaper);
-      console.log("Current papers to visualize:", papersToVisualize);
+    if (currentPaper === null) {
+      return;
     }
+
+    if (papersToVisualize.length === 1) {
+      return;
+    }
+
+    if (papersToVisualize.some((paper) => paper.doi === currentPaper.doi)) {
+      return;
+    }
+
+    setPapersToVisualize([...papersToVisualize, currentPaper]);
+    refetchBfs();
   };
 
   useEffect(() => {
-    console.log("jiowejfiw");
     if (currentPaper !== null) {
-      const existingResults = papersToVisualize.results;
+      const existingResults = papersToVisualize;
       const isPaperAlreadySelected = existingResults.some(
-        (paper) => paper.DOI === currentPaper.DOI
+        (paper) => paper.doi === currentPaper.doi
       );
 
-      if (existingResults.length >= 2 || isPaperAlreadySelected) {
-        console.log("boolean");
+      if (existingResults.length >= 1 || isPaperAlreadySelected) {
         setDisabled(true);
       } else {
         setDisabled(false);
       }
     } else {
-      console.log("hello");
       setDisabled(true);
     }
   }, [papersToVisualize, currentPaper]);
@@ -61,16 +55,18 @@ const ArticleDetails = ({
   return (
     <Card className="flex w-full flex-1 flex-col gap-0 p-4 text-black rounded-sm">
       <h1 className="text-md font-bold">
-        {currentPaper === null ? "Article Details" : currentPaper.title}
+        {currentPaper === null
+          ? "Article Details"
+          : currentPaper.title.length > 45
+          ? currentPaper.title.substring(0, 45) + "..."
+          : currentPaper.title}
       </h1>
       <Separator className="bg-black my-1 rounded-sm" />
       {currentPaper === null ? (
         <p>No paper selected</p>
       ) : (
         <div className="flex w-full h-full flex-col justify-between">
-          <div className="text-md">
-            <p>{currentPaper.summary}</p>
-          </div>
+          <div className="text-md">{/* <p>{currentPaper.summary}</p> */}</div>
           <Button
             className={cn(
               "text-sm border-black border-1 cursor-pointer",
