@@ -75,7 +75,7 @@ SELECT p.*
 FROM papers p
 JOIN unique_node_distances und ON p.doi = und.doi
 WHERE p.doi IN (SELECT doi FROM unique_node_distances)
-ORDER BY und.distance
+ORDER BY und.distance LIMIT 30
 """
 
 
