@@ -76,6 +76,8 @@
     margin-bottom: 30px; 
     flex-direction: column;
     justify-content: center;
+
+    color: black; 
 }
 
 .article-title h1{
@@ -111,10 +113,20 @@ hr {
     margin: 10px 0;
 }
 
-.select-button {
+.select-button-show {
     width: 50%;
     color: white;
     margin-bottom: 10px;
+
+    pointer-events: auto; 
+}
+
+.select-button-disabled {
+    width: 50%;
+    color: red;
+    margin-bottom: 10px;
+
+    pointer-events: none; 
 }
 
 .panel-right {

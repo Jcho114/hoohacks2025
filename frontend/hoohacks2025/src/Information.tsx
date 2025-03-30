@@ -5,7 +5,11 @@ import './Information.css'
 
 import {PaperResultType, SearchResultsType} from './types/types';
 
-const Information = () => {
+const Information = ( {currentPaper, setCurrentPaper, papersToVisualize, setPapersToVisualize} : 
+                      { currentPaper : PaperResultType | null, 
+                        setCurrentPaper: (paper: PaperResultType | null) => void, 
+                        papersToVisualize : SearchResultsType, 
+                        setPapersToVisualize : (search_results : SearchResultsType) => void}) => {
 
     // Function to handle search submission
     const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -15,6 +19,7 @@ const Information = () => {
         
         // Perform search logic here using the query
         console.log("Search submitted for:", query);
+        console.log("Current Paper State:", currentPaper);
     }
 
     // Sample Search Query Returned Object
@@ -80,12 +85,14 @@ const Information = () => {
                 <input className = "" placeholder = "enter keywords, doi, or url..."></input>
             </form>
 
-            <SearchResults search_results = {sampleSearchResults}></SearchResults>
-            <ArticleDetails></ArticleDetails>
+            <SearchResults search_results = {sampleSearchResults} setCurrentPaper = {setCurrentPaper}
+            papersToVisualize = {papersToVisualize} setPapersToVisualize = {setPapersToVisualize}></SearchResults>
+            <ArticleDetails currentPaper = {currentPaper} papersToVisualize = {papersToVisualize} setPapersToVisualize = {setPapersToVisualize}></ArticleDetails>
         </div>
 
         <div className="panel-right"> 
-			<SelectedArticles></SelectedArticles>
+			    <SelectedArticles papersToVisualize = {papersToVisualize} setPapersToVisualize = {setPapersToVisualize}
+                            setCurrentPaper = {setCurrentPaper}></SelectedArticles>
         </div>
     </div>
   )

@@ -9,5 +9,5 @@ export interface PaperResultType {
 }
 
 export interface SearchResultsType {
-    [key: string]: Array<PaperResultType>;
+    "results": Array<PaperResultType>;
 }
