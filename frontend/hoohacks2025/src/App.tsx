@@ -13,7 +13,7 @@ const App = () => {
 
   return (
     <div className="flex flex-row w-screen h-screen">
-      <div className="z-10 w-1/4 h-full">
+      <div className="z-10 w-1/4 h-full border-r-1 border-black border-solid">
         <Information
           currentPaper={currentPaper}
           setCurrentPaper={setCurrentPaper}
