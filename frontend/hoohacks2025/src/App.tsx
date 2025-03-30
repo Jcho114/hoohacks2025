@@ -22,7 +22,7 @@ const App = () => {
         />
       </div>
       <div className="z-0 w-3/4 h-full">
-        <Graph />
+        <Graph setCurrentPaper={setCurrentPaper}/>
       </div>
     </div>
   );
