@@ -5,6 +5,7 @@ __pycache__
 # data
 *.db
 *.txt
+!requirements.txt
 *.json
 aditya
 allen
