@@ -40,6 +40,7 @@ def papers_search(query: str):
             "type": row[5],
             "title": row[6],
             "url": row[7],
+            "summary": row[8],
         }
         suggestions.append(suggestion)
     return {"suggestions": suggestions}
@@ -70,7 +71,7 @@ unique_node_distances AS (
     FROM node_distances
     GROUP BY doi
 )
-SELECT p.*, und.distance
+SELECT p.*
 FROM papers p
 JOIN unique_node_distances und ON p.doi = und.doi
 WHERE p.doi IN (SELECT doi FROM unique_node_distances)
@@ -96,7 +97,7 @@ def papers_bfs(doi: str):
             "type": row[5],
             "title": row[6],
             "url": row[7],
-            "distance": row[8] if row[0] != doi else 0,
+            "summary": row[8],
         }
         if row[0] == doi:
             nodes.insert(0, node)

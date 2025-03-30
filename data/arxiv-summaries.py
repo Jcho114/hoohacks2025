@@ -18,7 +18,7 @@ with (
     for line in lines:
         obj = json.loads(line)
         doi = obj["doi"]
-        summary = "'" + obj["abstract"] + "'"
+        summary = obj["abstract"].strip()
 
         cursor.execute(UPDATE_QUERY, [summary, doi])
 
