@@ -6,8 +6,8 @@ __pycache__
 *.db
 *.txt
 !requirements.txt
-*.json
 aditya
+arxiv.json
 allen
 lorenzo
 doi
