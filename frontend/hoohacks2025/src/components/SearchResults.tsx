@@ -10,6 +10,7 @@ const SearchResults = ({
   currentPaper,
   setCurrentPaper,
   papersToVisualize,
+  isFetchingBfs,
   setPapersToVisualize,
   refetchBfs,
 }: {
@@ -18,6 +19,7 @@ const SearchResults = ({
   currentPaper: PaperType | null;
   setCurrentPaper: (paper: PaperType | null) => void;
   papersToVisualize: PaperType[];
+  isFetchingBfs: boolean;
   setPapersToVisualize: (papers: PaperType[]) => void;
   refetchBfs: () => void;
 }) => {
@@ -55,6 +57,7 @@ const SearchResults = ({
               cancel={false}
               setCurrentPaper={setCurrentPaper}
               papersToVisualize={papersToVisualize}
+              isFetchingBfs={isFetchingBfs}
               setPapersToVisualize={setPapersToVisualize}
               key={index}
             />

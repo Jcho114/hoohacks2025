@@ -3,7 +3,7 @@ import SearchResults from "./SearchResults";
 import SelectedArticles from "./SelectedArticles";
 import { FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { PaperType } from "@/api/papers";
+import { GraphDataType, PaperType } from "@/api/papers";
 import { usePaperSuggestion } from "@/hooks/papers";
 import { IoMdPaperPlane } from "react-icons/io";
 
@@ -13,12 +13,16 @@ const Information = ({
   setCurrentPaper,
   papersToVisualize,
   setPapersToVisualize,
+  bfsData,
+  isFetchingBfs,
 }: {
   currentPaper: PaperType | null;
   refetchBfs: () => void;
   setCurrentPaper: (paper: PaperType | null) => void;
   papersToVisualize: PaperType[];
   setPapersToVisualize: (search_results: PaperType[]) => void;
+  bfsData: GraphDataType;
+  isFetchingBfs: boolean;
 }) => {
   const [query, setQuery] = useState<string | null>(null);
   const suggestionQuery = usePaperSuggestion(query);
@@ -67,6 +71,8 @@ const Information = ({
         papersToVisualize={papersToVisualize}
         setPapersToVisualize={setPapersToVisualize}
         setCurrentPaper={setCurrentPaper}
+        bfsData={bfsData}
+        isFetchingBfs={isFetchingBfs}
       />
     </div>
   );

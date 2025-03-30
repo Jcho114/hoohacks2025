@@ -164,7 +164,8 @@ function Graph({
           onConnect={onConnect}
           connectionLineType={ConnectionLineType.SmoothStep}
           fitView
-          minZoom={0.05}
+          zoomOnDoubleClick={false}
+          minZoom={0.1}
           onNodeClick={(_, node) => {
             setIsSelectable(node.id);
             setCurrentPaper(node.data.paper as PaperType);

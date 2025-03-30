@@ -20,6 +20,8 @@ const App = () => {
           setCurrentPaper={setCurrentPaper}
           papersToVisualize={papersToVisualize}
           setPapersToVisualize={setPapersToVisualize}
+          bfsData={bfsData}
+          isFetchingBfs={isBfsFetching}
         />
       </div>
       <div className="z-0 w-3/4 h-full">
