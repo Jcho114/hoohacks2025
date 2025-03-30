@@ -61,12 +61,7 @@ const Information = ({
           refetchBfs={refetchBfs}
         />
       </div>
-      <ArticleDetails
-        refetchBfs={refetchBfs}
-        currentPaper={currentPaper}
-        papersToVisualize={papersToVisualize}
-        setPapersToVisualize={setPapersToVisualize}
-      />
+      <ArticleDetails currentPaper={currentPaper} />
       <SelectedArticles
         papersToVisualize={papersToVisualize}
         setPapersToVisualize={setPapersToVisualize}

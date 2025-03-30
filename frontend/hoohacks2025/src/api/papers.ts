@@ -9,6 +9,7 @@ export interface PaperType {
   type: string;
   title: string;
   url: string;
+  summary: string;
 }
 
 export const fetchPaperSuggestions = async (
