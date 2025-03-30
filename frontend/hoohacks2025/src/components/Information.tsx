@@ -44,23 +44,25 @@ const Information = ({
           <Input
             className="w-full text-xl p-4 rounded-sm focus-visible:ring-1"
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="enter keywords, doi, or url..."
+            placeholder="Enter keywords, doi, or url..."
           />
         </form>
         <SearchResults
           isSuggestionFetching={suggestionQuery.isSuggestionFetching}
           search_results={suggestionQuery.suggestionData || []}
+          currentPaper={currentPaper}
           setCurrentPaper={setCurrentPaper}
           papersToVisualize={papersToVisualize}
           setPapersToVisualize={setPapersToVisualize}
-        />
-        <ArticleDetails
           refetchBfs={refetchBfs}
-          currentPaper={currentPaper}
-          papersToVisualize={papersToVisualize}
-          setPapersToVisualize={setPapersToVisualize}
         />
       </div>
+      <ArticleDetails
+        refetchBfs={refetchBfs}
+        currentPaper={currentPaper}
+        papersToVisualize={papersToVisualize}
+        setPapersToVisualize={setPapersToVisualize}
+      />
       <SelectedArticles
         papersToVisualize={papersToVisualize}
         setPapersToVisualize={setPapersToVisualize}

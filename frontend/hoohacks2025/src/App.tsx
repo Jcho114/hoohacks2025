@@ -28,6 +28,9 @@ const App = () => {
           isBfsFetching={isBfsFetching}
           currentPaper={currentPaper}
           setCurrentPaper={setCurrentPaper}
+          refetchBfs={refetchBfs}
+          papersToVisualize={papersToVisualize}
+          setPapersToVisualize={setPapersToVisualize}
         />
       </div>
     </div>

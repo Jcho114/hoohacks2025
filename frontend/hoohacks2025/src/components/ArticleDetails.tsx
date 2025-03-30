@@ -28,7 +28,7 @@ const ArticleDetails = ({
   };
 
   return (
-    <Card className="flex w-full flex-1 flex-col gap-0 p-4 text-black rounded-sm">
+    <Card className="absolute flex w-1/5 bg-white h-3/8 flex-col gap-0 p-4 rounded-sm bottom-6 right-6">
       <h1 className="text-md font-bold">
         {currentPaper === null ? (
           "Article Details"
@@ -50,7 +50,7 @@ const ArticleDetails = ({
             className="text-sm border-black border-1 cursor-pointer"
             onClick={() => handleSelectPaper()}
           >
-            Submit
+            Navigate
           </Button>
         </div>
       )}

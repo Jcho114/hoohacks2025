@@ -7,18 +7,38 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 const SearchResults = ({
   isSuggestionFetching,
   search_results,
+  currentPaper,
   setCurrentPaper,
   papersToVisualize,
   setPapersToVisualize,
+  refetchBfs,
 }: {
   isSuggestionFetching: boolean;
   search_results: PaperType[];
+  currentPaper: PaperType | null;
   setCurrentPaper: (paper: PaperType | null) => void;
   papersToVisualize: PaperType[];
   setPapersToVisualize: (papers: PaperType[]) => void;
+  refetchBfs: () => void;
 }) => {
+  const handleSelectPaper = () => {
+    if (currentPaper === null) {
+      return;
+    }
+
+    if (papersToVisualize.some((paper) => paper.doi === currentPaper.doi)) {
+      return;
+    }
+
+    setPapersToVisualize([currentPaper]);
+    refetchBfs();
+  };
+
   return (
-    <Card className="flex flex-col w-full px-4 py-4 !gap-3 my-0 flex-2 overflow-scroll rounded-sm">
+    <Card
+      onDoubleClick={handleSelectPaper}
+      className="flex flex-col w-full px-4 py-4 !gap-3 my-0 flex-2 overflow-scroll rounded-sm"
+    >
       {isSuggestionFetching ? (
         <div className="flex w-full h-full justify-center items-center">
           <LoadingSpinner />

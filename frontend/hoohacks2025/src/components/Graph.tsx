@@ -16,12 +16,15 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 
 const nodeTypes = { paperNodes: PaperNodes };
 
-const toNodes = (bfs_nodes: PaperType[]) => {
-  console.log("nodes", bfs_nodes);
+const toNodes = (
+  bfs_nodes: PaperType[],
+  handleSelectPaper: () => void,
+  setCurrentPaper: (paper: PaperType | null) => void
+) => {
   return bfs_nodes.map((node: PaperType) => ({
     id: node.doi,
     position: { x: Math.random() * 1000, y: Math.random() * 800 },
-    data: { paper: node },
+    data: { paper: node, handleSelectPaper, setCurrentPaper },
     type: "paperNodes",
   }));
 };
@@ -77,14 +80,38 @@ const getLayoutedElements = (
 function Graph({
   bfsData,
   isBfsFetching,
+  currentPaper,
   setCurrentPaper,
+  papersToVisualize,
+  setPapersToVisualize,
+  refetchBfs,
 }: {
   bfsData: GraphDataType;
   isBfsFetching: boolean;
+  currentPaper: PaperType | null;
   setCurrentPaper: (paper: PaperType | null) => void;
+  setPapersToVisualize: (papers: PaperType[]) => void;
+  papersToVisualize: PaperType[];
+  refetchBfs: () => void;
 }) {
+  const handleSelectPaper = useCallback(() => {
+    console.log(papersToVisualize);
+    if (currentPaper === null) {
+      return;
+    }
+
+    if (papersToVisualize.some((paper) => paper.doi === currentPaper.doi)) {
+      return;
+    }
+
+    setPapersToVisualize([currentPaper]);
+    refetchBfs();
+  }, [currentPaper, papersToVisualize, refetchBfs, setPapersToVisualize]);
+
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(
-    bfsData === undefined ? [] : toNodes(bfsData.nodes)
+    bfsData === undefined
+      ? []
+      : toNodes(bfsData.nodes, handleSelectPaper, setCurrentPaper)
   );
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(
     bfsData === undefined ? [] : toEdges(bfsData.edges)
@@ -93,7 +120,11 @@ function Graph({
 
   useEffect(() => {
     if (bfsData) {
-      const newNodes = toNodes(bfsData.nodes);
+      const newNodes = toNodes(
+        bfsData.nodes,
+        handleSelectPaper,
+        setCurrentPaper
+      );
       const newEdges = toEdges(bfsData.edges);
 
       const { nodes, edges } = getLayoutedElements(newNodes, newEdges);
@@ -101,7 +132,7 @@ function Graph({
       setNodes(nodes);
       setEdges(edges);
     }
-  }, [bfsData, setNodes, setEdges]);
+  }, [bfsData, setNodes, setEdges, handleSelectPaper, setCurrentPaper]);
 
   const onConnect = useCallback(
     (params) =>
@@ -111,15 +142,15 @@ function Graph({
           eds
         )
       ),
-    []
+    [setEdges]
   );
 
   return (
     <div className="w-full h-full flex justify-center items-center bg-gray-50">
-      {bfsData === undefined ? (
-        <h1>No Paper Selected</h1>
-      ) : isBfsFetching ? (
+      {isBfsFetching ? (
         <LoadingSpinner />
+      ) : bfsData === undefined ? (
+        <h1>No Paper Selected</h1>
       ) : (
         <ReactFlow
           nodes={nodes.map((node) => ({
@@ -134,11 +165,11 @@ function Graph({
           connectionLineType={ConnectionLineType.SmoothStep}
           fitView
           minZoom={0.05}
-          onNodeClick={(event, node) => {
+          onNodeClick={(_, node) => {
             setIsSelectable(node.id);
             setCurrentPaper(node.data.paper as PaperType);
           }}
-          onNodeDrag={(event, node) => {
+          onNodeDrag={(_, node) => {
             setIsSelectable(node.id);
             setCurrentPaper(node.data.paper as PaperType);
           }}
