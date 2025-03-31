@@ -1,5 +1,7 @@
 # Paper Trail
 
+Our submission for HooHacks 2025.
+
 ![thumbnail](documentation/thumbnail.png)
 
 ## Inspiration
